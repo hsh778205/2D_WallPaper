@@ -3,6 +3,7 @@
 #include<sstream>
 #include<fstream>
 #include<cstring>
+#include<ctime>
 using namespace std;
 
 
@@ -71,11 +72,12 @@ int main()
 	cout<<"请输入url（可以调用json的）\n";
 	cin>>address;
 	if(address.find("json")==string::npos){
-		cout<<"这不是标准的json\n是否在末尾加上\"?return=json\"?";
+		cout<<"这不是标准的json\n是否在末尾加上\"?return=json\"?(y/n)";
 		string t;
 		cin>>t;
 		if(t=="y"||t=="yes") address+="?return=json";
 	}
+	int start_time=clock();
 	while(true)
 	{
 		if(!get_json(address)){
@@ -84,7 +86,8 @@ int main()
 			continue;
 		}
 		download(url,name);
-		cout<<"下载尝试次数="<<++n<<endl; 
+		cout<<"下载尝试次数="<<++n<<endl;
+		cout<<"速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
 //		cin.get();
 	}
 	
