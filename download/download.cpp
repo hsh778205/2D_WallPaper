@@ -11,7 +11,7 @@ using namespace std;
 void download(string down_url,string name)
 {
 	string str;
-	cout<<"down_url="<<down_url;
+	cout<<"down_url="<<down_url<<endl;
 	str="certutil -urlcache -split -f "+down_url+" "+name;
 	cout<<"执行指令"<<str<<endl;
 	system(str.c_str());
@@ -19,6 +19,8 @@ void download(string down_url,string name)
 }
 
 string url,name;
+
+int max_time;
 
 bool get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
 {
@@ -36,7 +38,7 @@ bool get_json(string json_url,string key1="http",string key2="large/",char stop=
 		}
 		cout<<"json:"<<json<<endl;
 		if(json.find(key1)==string::npos||json.find(key2)==string::npos){
-			cout<<"解析失败:未查找到关键字";
+			cout<<"解析失败:未查找到关键字\n";
 		}
 		else{
 			int post=json.find(key1);
@@ -77,7 +79,11 @@ int main()
 		cin>>t;
 		if(t=="y"||t=="yes") address+="?return=json";
 	}
-	int start_time=clock();
+	cout<<"输入最高速度,(0为不限速)每分钟最多XX张";
+	cin>>max_time;
+	if(max_time!=0) max_time=60000/max_time;
+	int start_time=clock(),last_time=clock();
+	system(("title "+address).c_str());
 	while(true)
 	{
 		if(!get_json(address)){
@@ -87,7 +93,12 @@ int main()
 		}
 		download(url,name);
 		cout<<"下载尝试次数="<<++n<<endl;
-		cout<<"速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
+		
+		cout<<"当前速度=每分钟"<<(double)60000/(clock()-last_time)<<"张\n";
+		cout<<"平均速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
+		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
+		last_time=clock();
+		cout<<endl;
 //		cin.get();
 	}
 	
