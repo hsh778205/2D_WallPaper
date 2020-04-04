@@ -22,7 +22,7 @@ string url,name;
 
 int max_time;
 
-bool get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
+int get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
 {
 	cout<<"开始下载json数据\n";
 	stringstream ss;
@@ -51,6 +51,7 @@ bool get_json(string json_url,string key1="http",string key2="large/",char stop=
 			while(json[post]!=stop) name.push_back(json[post++]);
 			cout<<"name="<<name<<endl;
 			cout<<"json数据解析完毕\n";
+			if(system(("dir /a "+name).c_str())!=1) return 2;
 			return 1;
 		}
 	}
@@ -86,9 +87,15 @@ int main()
 	system(("title "+address).c_str());
 	while(true)
 	{
-		if(!get_json(address)){
+		int res=get_json(address);
+		if(res==0){
 			cout<<"stoping...\n";
 			cin.get();
+			continue;
+		}
+		if(res==2){
+			cout<<"下载重复自动跳过\n\n";
+			last_time=clock();
 			continue;
 		}
 		download(url,name);
