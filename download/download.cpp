@@ -13,8 +13,6 @@ int succ,fail,had,n;
 
 void title(string add)
 {
-//	cout<<"下载速度=每分钟"<<(double)60000/(clock()-last_time)<<"张\n";
-//	cout<<"平均速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
 	stringstream ss;
 	ss<<"title add="<<add<<" all="<<n<<" succ="<<succ<<" had="<<had<<" fail="<<fail<<" down_speed="<<(double)60000/(clock()-last_time)<<" avg_speed="<<(double)n/(clock()-start_time)*60000;
 	last_time=clock();
@@ -102,7 +100,7 @@ int main()
 	
 	while(true)
 	{
-		cout<<"****************************************"<<endl;
+		cout<<"**************************************************"<<endl;
 		title(address);
 		n++;
 		int res=get_json(address);
@@ -119,8 +117,6 @@ int main()
 			continue;
 		}
 		download(url,name);
-//		cout<<"下载尝试次数="<<n<<endl;
-//		cout<<"查重取消下载次数="<<had<<endl;
 		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
 		
 //		cin.get();
