@@ -3,6 +3,7 @@
 #include<sstream>
 #include<fstream>
 #include<cstring>
+#include<set>
 #include<ctime>
 using namespace std;
 
@@ -10,7 +11,6 @@ int start_time,last_time;
 int max_time;
 int succ,fail,had,n; 
 //  成功 失败 重复 总数 
-
 void title(string add)
 {
 	stringstream ss;
@@ -19,13 +19,29 @@ void title(string add)
 	system(ss.str().c_str()); 
 }
 
+set<string>his;
+
+int read()
+{
+	ifstream fin("history.txt",ios::in);
+	string t;
+	while(fin.peek()!=EOF) fin>>t,his.insert(t);
+	return his.size();
+} 
+
+void insert(string name)//向文本中添加 
+{
+	ofstream fout("history.txt",ios::out|ios::app);
+	fout<<name<<endl;
+}
+
 void download(string down_url,string name)
 {
 	string str;
 	cout<<"down_url="<<down_url<<endl;
 	str="certutil -urlcache -split -f "+down_url+" "+name;
-	cout<<"执行指令"<<str<<endl;
-	if(system(str.c_str())==0) succ++;
+	cout<<"执行指令:"<<str<<endl;
+	if(system(str.c_str())==0) succ++,his.insert(name),insert(name);
 	else fail++;
 	cout<<"下载完毕\n"; 
 }
@@ -64,7 +80,12 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 			while(json[post]!=stop) name.push_back(json[post++]);
 			cout<<"name="<<name<<endl;
 			cout<<"json数据解析完毕\n";
-			if(system(("dir /a "+name).c_str())!=1) return 2;
+			if(his.find(name)!=his.end()) return 3;
+			if(system(("dir /a "+name).c_str())!=1){
+				his.insert(name); 
+				insert(name);//本地已有但是记录里没有，那么就要向记录中添加 
+				return 2;
+			}
 			return 1;
 		}
 	}
@@ -82,6 +103,8 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 //https://api.ixiaowai.cn/gqapi/gqapi.php（高清壁纸） 
 int main()
 {
+	cout<<"读取记录中...\n";
+	cout<<"读取到"<<read()<<"条历史记录\n"; 
 	stringstream ss;
 	string address;
 	cout<<"请输入url（可以调用json的）\n";
@@ -105,13 +128,18 @@ int main()
 		n++;
 		int res=get_json(address);
 		if(res==0){
-			cout<<"stoping...\n";
-			cin.get();
+			if(fail>100) cout<<"stoping...\n",cin.get();
 			fail++;
 			continue;
 		}
+		if(res==3){
+			cout<<"在历史记录中找到下载记录，自动跳过\n\n";
+			last_time=clock();
+			had++;
+			continue;
+		} 
 		if(res==2){
-			cout<<"下载重复自动跳过\n\n";
+			cout<<"在本地找到同名文件，自动跳过\n\n";
 			last_time=clock();
 			had++;
 			continue;
