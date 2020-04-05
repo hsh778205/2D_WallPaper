@@ -6,7 +6,20 @@
 #include<ctime>
 using namespace std;
 
+int start_time,last_time;
+int max_time;
+int succ,fail,had,n; 
+//  成功 失败 重复 总数 
 
+void title(string add)
+{
+//	cout<<"下载速度=每分钟"<<(double)60000/(clock()-last_time)<<"张\n";
+//	cout<<"平均速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
+	stringstream ss;
+	ss<<"title add="<<add<<" all="<<n<<" succ="<<succ<<" had="<<had<<" fail="<<fail<<" down_speed="<<(double)60000/(clock()-last_time)<<" avg_speed="<<(double)n/(clock()-start_time)*60000;
+	last_time=clock();
+	system(ss.str().c_str()); 
+}
 
 void download(string down_url,string name)
 {
@@ -14,20 +27,22 @@ void download(string down_url,string name)
 	cout<<"down_url="<<down_url<<endl;
 	str="certutil -urlcache -split -f "+down_url+" "+name;
 	cout<<"执行指令"<<str<<endl;
-	system(str.c_str());
+	if(system(str.c_str())==0) succ++;
+	else fail++;
 	cout<<"下载完毕\n"; 
 }
 
 string url,name;
-
-int max_time;
-
+//1成功 2重复 0失败 
 int get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
 {
 	cout<<"开始下载json数据\n";
 	stringstream ss;
 	ss<<"certutil -urlcache -split -f "<<json_url<<" temp.txt"; 
-	system(ss.str().c_str());
+	if(system(ss.str().c_str())!=0){
+		fail++;
+		return 0;
+	}
 	ifstream fin("temp.txt",ios::in);
 	if(fin.peek()==EOF) cout<<"没有json数据返回\n";
 	else{
@@ -70,7 +85,6 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 int main()
 {
 	stringstream ss;
-	int n=0;
 	string address;
 	cout<<"请输入url（可以调用json的）\n";
 	cin>>address;
@@ -83,29 +97,32 @@ int main()
 	cout<<"输入最高速度,(0为不限速)每分钟最多XX张";
 	cin>>max_time;
 	if(max_time!=0) max_time=60000/max_time;
-	int start_time=clock(),last_time=clock();
+	start_time=clock(),last_time=clock();
 	system(("title "+address).c_str());
+	
 	while(true)
 	{
+		cout<<"****************************************"<<endl;
+		title(address);
+		n++;
 		int res=get_json(address);
 		if(res==0){
 			cout<<"stoping...\n";
 			cin.get();
+			fail++;
 			continue;
 		}
 		if(res==2){
 			cout<<"下载重复自动跳过\n\n";
 			last_time=clock();
+			had++;
 			continue;
 		}
 		download(url,name);
-		cout<<"下载尝试次数="<<++n<<endl;
-		
-		cout<<"当前速度=每分钟"<<(double)60000/(clock()-last_time)<<"张\n";
-		cout<<"平均速度=每分钟"<<(double)n/(clock()-start_time)*60000<<"张\n";
+//		cout<<"下载尝试次数="<<n<<endl;
+//		cout<<"查重取消下载次数="<<had<<endl;
 		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
-		last_time=clock();
-		cout<<endl;
+		
 //		cin.get();
 	}
 	
