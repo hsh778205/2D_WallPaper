@@ -54,6 +54,12 @@
 
 先把根目录的history.txt拷贝到/download中，再在download中运行该程序，就可以看看本次下载了什么
 
+## /Minecraft_Wallpapers
+
+form https://t.bilibili.com/387278090140124626?tab=2
+
+侵删（？）
+
 ## /download/download.cpp
 
 程序的原理
