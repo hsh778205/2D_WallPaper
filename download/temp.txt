@@ -1,1 +1,1 @@
-{"code":"200","imgurl":"https:\/\/tva3.sinaimg.cn\/large\/0072Vf1pgy1foxkf6k4jrj31hc0u0k6b.jpg","width":"1920","height":"1080"}
+{"code":"200","acgurl":"https:\/\/tva1.sinaimg.cn\/large\/0072Vf1pgy1fodqo4ntdtj31cq0yggz8.jpg","width":"1754","height":"1240","size":"jpg"}
