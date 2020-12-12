@@ -22,7 +22,7 @@ int main()
 	while(fin.peek()!=EOF){
 		getline(fin,str);
 		vec.push_back(str);
-		cout<<"add "<<str<<endl;
+//		cout<<"add "<<str<<endl;
 	}
 	cout<<"read over"<<endl;
 	cout<<"total:"<<vec.size()<<endl;
