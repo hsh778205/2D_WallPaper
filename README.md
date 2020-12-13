@@ -112,3 +112,11 @@ form https://t.bilibili.com/387278090140124626?tab=2
 2. 类比网站[WAIT: What Anime Is This? - Anime Scene Search Engine](https://trace.moe/)的原理[CLD](https://en.wikipedia.org/wiki/Color_layout_descriptor)，把图像先分割成$64$个(或者更多，设分割成n个格子)个大格子，计算每个格子中所有颜色的`RGB`平均值($x_{1\sim n}$)。然后用这个平均值数列与其他图片的平均值做减法，再套用某些小学数学模型比如**方差公式**。若差异度小于某个下界，那么就可以认为这两张图片相同。
 
 显然，后者更直接更方便。
+
+### Step
+
+**upd-2020.12.13 17:48**
+
+* [ ] 写一个程序(或者函数)，接受一个参数(本地图片地址)，，打开并进行计算，返回一个CLD计算后的矩阵。
+* [ ] 把所有图片都用这个程序计算并重命名为矩阵的某个特征值(比如hash,MD5)。
+* [ ] 在`download.cpp`中调用这个程序，以后下载时用这个判重。
