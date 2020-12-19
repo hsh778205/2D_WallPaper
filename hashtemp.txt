@@ -1,0 +1,2 @@
+CertUtil: -hashfile 失败: 0x80070002 (WIN32: 2 ERROR_FILE_NOT_FOUND)
+CertUtil: 系统找不到指定的文件。
