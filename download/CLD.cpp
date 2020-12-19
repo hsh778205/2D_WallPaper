@@ -48,7 +48,7 @@ template<class T>inline void write(T x)
 }
 #include<fstream>
 /*
-
+if you use this main(),you should refrash the CLD.txt
 
 */
 
