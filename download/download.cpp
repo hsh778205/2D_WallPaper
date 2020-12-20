@@ -4,6 +4,7 @@
 #include<fstream>
 #include<cstring>
 #include<set>
+#include<vector>
 #include<ctime>
 using namespace std;
 
@@ -19,31 +20,147 @@ void title(string add)
 	system(ss.str().c_str()); 
 }
 
-set<string>his;
-
+struct img
+{
+	string name;
+	int CLD[9][9][3];
+	img(string str="")
+	{
+		name=str;
+		memset(CLD,0,sizeof(CLD));
+	}
+	bool operator<(img z)const
+	{
+		for(int i=1;i<=8;i++)
+		for(int j=1;j<=8;j++)
+		{
+			if(CLD[i][j]<z.CLD[i][j]) return 1;
+			if(CLD[i][j]>z.CLD[i][j]) return 0;
+		}
+		return 0;
+	}
+};
+double calc(img a,img b)
+{
+	double ans;
+	for(int c=0;c<3;c++)
+	{
+		for(int i=1;i<=8;i++)
+		for(int j=1;j<=8;j++)
+			ans+=(a.CLD[i][j]-b.CLD[i][j])*(a.CLD[i][j]-b.CLD[i][j]);
+	}
+	return ans;
+}
+vector<img>his;
+set<string>namelib;
+ifstream md5in,fin;
+ofstream fout;
 int read()
 {
-	ifstream fin("history.txt",ios::in);
-	string t;
-	while(fin.peek()!=EOF) fin>>t,his.insert(t);
+	fin.open("lib.txt",ios::in);
+	img t;
+	while(fin.peek()!=EOF)
+	{
+		fin>>t.name;
+		namelib.insert(t.name);
+		for(int i=1;i<=8;i++)
+		for(int j=1;j<=8;j++)
+		{
+			for(int c=0;c<3;c++)
+				fin>>t.CLD[i][j][c];
+		}
+		his.push_back(t);
+	}
+	fin.close();
 	return his.size();
 } 
-
-void insert(string name)//向文本中添加 
+string md5(string name)
 {
-	ofstream fout("history.txt",ios::out|ios::app);
+	fout.open("name.txt",ios::out);
 	fout<<name<<endl;
+	fout.close();
+	system("rename.exe");
+	fin.open("rename.txt",ios::in);
+	getline(fin,name);///////////////////////////////////////////////
+	cout<<"here is download.exe---line 85"<<endl<<"the new md5 name is "<<name<<endl;
+	fin.close();
+	return name;
 }
 
-void download(string down_url,string name)
+void insert(img t)//向文本中添加 
+{
+	fout.open("lib.txt",ios::out|ios::app);
+	fout<<t.name<<" ";
+	for(int i=1;i<=8;i++)
+	for(int j=1;j<=8;j++)
+	for(int c=0;c<3;c++)
+		fout<<t.CLD[i][j][c]<<" ";
+	fout<<endl;
+	fout.close();
+}
+void cld(string name)
+{
+	system("del CLD.txt");
+	system(("CLD.exe "+name).c_str());
+}
+void cld(img & t)
+{
+	cld(t.name);
+	fin.open("CLD.txt",ios::in);
+	for(int i=1;i<=8;i++)
+	for(int j=1;j<=8;j++)
+	{
+		for(int c=0;c<3;c++)
+		fin>>t.CLD[i][j][c];
+	}
+	fin.close();
+}
+void insert(string name)//ask CLD
+{
+	cld(name);
+	img t(name);
+	fin.open("CLD.txt",ios::in);
+	for(int i=1;i<=8;i++)
+	for(int j=1;j<=8;j++)
+	{
+		for(int c=0;c<3;c++)
+		fin>>t.CLD[i][j][c];
+	}
+	fin.close();
+	insert(t);
+}
+int download(string down_url,string name)
 {
 	string str;
 	cout<<"down_url="<<down_url<<endl;
 	str="certutil -urlcache -split -f "+down_url+" "+name;
 	cout<<"执行指令:"<<str<<endl;
-	if(system(str.c_str())==0) succ++,his.insert(name),insert(name);
+	if(system(str.c_str())==0)
+	{
+		//判重 
+		name=md5(name);
+		if(namelib.find(name)!=namelib.end()) return 1;//found in history
+		if(system(("dir /a "+name).c_str())!=1){//found in local
+			namelib.insert(name); 
+			insert(name);//本地已有但是记录里没有，那么就要向记录中添加 
+			return 2;
+		}
+		img t(name);
+		cld(t);
+		double dt;
+		for(int i=0;i<his.size();i++)
+		{
+			dt=calc(t,his[i]);
+			if(dt<10)
+			{
+				cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nnow="<<i<<endl;
+				system("pause");
+			}
+		}
+	}
 	else fail++;
 	cout<<"下载完毕\n"; 
+	return 0;
 }
 
 string url,name;
@@ -57,7 +174,7 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 		fail++;
 		return 0;
 	}
-	ifstream fin("temp.txt",ios::in);
+	fin.open("temp.txt",ios::in);
 	if(fin.peek()==EOF) cout<<"没有json数据返回\n";
 	else{
 		string json;
@@ -68,6 +185,7 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 		cout<<"json:"<<json<<endl;
 		if(json.find(key1)==string::npos||json.find(key2)==string::npos){
 			cout<<"解析失败:未查找到关键字\n";
+			return 1;
 		}
 		else{
 			int post=json.find(key1);
@@ -80,16 +198,10 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 			while(json[post]!=stop) name.push_back(json[post++]);
 			cout<<"name="<<name<<endl;
 			cout<<"json数据解析完毕\n";
-			if(his.find(name)!=his.end()) return 3;
-			if(system(("dir /a "+name).c_str())!=1){
-				his.insert(name); 
-				insert(name);//本地已有但是记录里没有，那么就要向记录中添加 
-				return 2;
-			}
-			return 1;
+			return 0;
 		}
 	}
-	return 0;
+	return 1;
 }
 //http://api.mtyqx.cn/tapi/random.php
 //http://api.mtyqx.cn/api/random.php?return=json
@@ -126,25 +238,8 @@ int main()
 		cout<<"****************************************************************************************************"<<endl;
 		title(address);
 		n++;
-		int res=get_json(address);
-		if(res==0){
-			if(fail>100) cout<<"stoping...\n",cin.get();
-			fail++;
-			continue;
-		}
-		if(res==3){
-			cout<<"在历史记录中找到下载记录，自动跳过\n\n";
-			last_time=clock();
-			had++;
-			continue;
-		} 
-		if(res==2){
-			cout<<"在本地找到同名文件，自动跳过\n\n";
-			last_time=clock();
-			had++;
-			continue;
-		}
-		download(url,name);
+		if(get_json(address)) continue;
+		int res=download(url,name);
 		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
 		
 //		cin.get();

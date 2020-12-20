@@ -32,11 +32,15 @@
 
 ### url&json.txt
 
-里面有我收集的一些api网站
+里面有一些api网站
 
 ### /Avatar
 
 可以当头像(或者手机壁纸)的图片
+
+### /Minecraft_Wallpapers
+
+form https://t.bilibili.com/387278090140124626?tab=2
 
 ### /download
 
@@ -44,21 +48,17 @@
 
 可以批量下载这些图片的程序&源代码
 
-通过一些网络上的API接口
+通过一些网络上的$API$接口
 
-条件是这些接口要能返回json数据
+条件是这些接口要能返回`json`数据
 
-如果用的不是源代码里面的地址的话,get_json()函数的参数需要改一下。
+如果用的不是源代码里面的地址的话,`get_json()`函数的参数需要改一下。
 
 使用建议：
 
-先把根目录的history.txt拷贝到/download中，再在download中运行该程序，就可以看看本次下载了什么
+先把根目录的history.txt拷贝到/download中，再在download中运行该程序
 
-### /Minecraft_Wallpapers
-
-form https://t.bilibili.com/387278090140124626?tab=2
-
-### 主程序/download/download.cpp
+## 主程序/download/download.cpp
 
 ### 程序的原理
 
@@ -116,8 +116,16 @@ form https://t.bilibili.com/387278090140124626?tab=2
 ### Step
 
 * [x] 把所有图片重命名为$MD5$。
-
 * [x] 写一个程序(或者函数)，接受多个参数，参数为本地图片地址，调用python计算矩阵。
 * [x] 用python分析图片计算$CLD$。
+* [ ] 预处理出一件下载好的图片的$CLD$至`lib.txt`
 * [ ] 在`download.cpp`中调用这个程序，以后下载时用这个判重。
+
+那么现在的判重顺序就有：
+
+1. `lib.txt`历史记录判重
+2. 文件名MD5
+3. $CLD$
+
+没了。
 
