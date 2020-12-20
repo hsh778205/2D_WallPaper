@@ -80,10 +80,10 @@ string md5(string name)
 	fout<<name<<endl;
 	fout.close();
 	system("rename.exe");
-	fin.open("rename.txt",ios::in);
-	getline(fin,name);///////////////////////////////////////////////
-	cout<<"here is download.exe---line 85"<<endl<<"the new md5 name is "<<name<<endl;
-	fin.close();
+//	fin.open("rename.txt",ios::in);
+//	getline(fin,name);///////////////////////////////////////////////
+//	cout<<"here is download.exe---line 85"<<endl<<"the new md5 name is "<<name<<endl;
+//	fin.close();
 	return name;
 }
 
@@ -101,12 +101,12 @@ void insert(img t)//向文本中添加
 void cld(string name)
 {
 	system("del CLD.txt");
-	system(("CLD.exe "+name).c_str());
+	system(("python CLD.py"));
 }
 void cld(img & t)
 {
 	cld(t.name);
-	fin.open("CLD.txt",ios::in);
+	ifstream fin("CLD.txt",ios::in);
 	for(int i=1;i<=8;i++)
 	for(int j=1;j<=8;j++)
 	{
@@ -155,8 +155,11 @@ int download(string down_url,string name)
 			{
 				cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nnow="<<i<<endl;
 				system("pause");
+				return 3;
 			}
 		}
+		his.push_back(name);
+		insert(t);
 	}
 	else fail++;
 	cout<<"下载完毕\n"; 

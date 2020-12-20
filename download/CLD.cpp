@@ -54,14 +54,27 @@ if you use this main(),you should refrash the CLD.txt first
 
 int main(int argc, char* argv[])//argv[0]==self
 {
-	if(argc==1) return 0;//防止无参数 
-	if(argc>2) main(argc-1,argv);//do other		
-	cout<<"doing "<<argv[argc-1]<<endl;//do this
-	string str=argv[argc-1];
-	fstream fout("tempname.txt",ios::out);
-	fout<<str;
-	fout.close();
-	system(("python CLD.py"));
+//	if(argc==1) return 0;//防止无参数 
+//	if(argc>2) main(argc-1,argv);//do other		
+//	cout<<"doing "<<argv[argc-1]<<endl;//do this
+//	string str=argv[argc-1];
+//	fstream fout("tempname.txt",ios::out);
+//	fout<<str;
+//	fout.close();
+//	system(("python CLD.py"));
+	
+	ifstream fin("rename.txt");
+	string str;
+	while(fin.peek()&&!fin.eof())
+	{
+		fin>>str;
+		cout<<"doing "<<str<<endl;//do this
+		fstream fout("tempname.txt",ios::out);
+		fout<<str;
+		fout.close();
+		system(("python CLD.py"));
+	}
+	fin.close();
 	return 0;
 }
 
