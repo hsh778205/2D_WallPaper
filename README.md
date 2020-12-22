@@ -128,4 +128,6 @@ form https://t.bilibili.com/387278090140124626?tab=2
 3. $CLD$
 
 没了。
-
+$$
+download(json)\to download(picture)\to ask(MD5)\to check(MD5)\\\to rename(MD5)\to calc(CLD)\to read(CLD)\to check(CLD)\to delete(MD5)
+$$

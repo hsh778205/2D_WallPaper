@@ -49,7 +49,7 @@ template<class T>inline void write(T x)
 #include<fstream>
 string str,md5,nxt;
 ifstream fin("name.txt",ios::in),tin;
-ofstream fout("tempname.txt",ios::out);
+ofstream fout("rename.txt",ios::out);
 int main()
 {
 	debug cout<<"this is rename.exe"<<endl;
@@ -65,7 +65,7 @@ int main()
 		getline(tin,md5);
 		tin>>md5;
 		tin.close();
-		system(("rename "+string(" \"")+str+"\" "+md5+nxt).c_str());
+//		system(("rename "+string(" \"")+str+"\" "+md5+nxt).c_str());
 		fout<<md5+nxt;
 //		fout.flush();
 		cout<<"rename.exe : we got a md5 name : "<<md5+nxt<<endl;
@@ -75,5 +75,9 @@ int main()
 	fout.close();
 	return 0;
 }
+
+
+
+
 
 

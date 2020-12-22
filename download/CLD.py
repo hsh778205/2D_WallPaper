@@ -2,7 +2,7 @@ import skimage.io as io
 import time
 st=time.clock()
 import matplotlib.pyplot as plt
-fp=open("tempname.txt","r")
+fp=open("md5.txt","r")
 done=False
 name=fp.readline()
 fp.close()

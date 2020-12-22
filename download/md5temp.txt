@@ -1,0 +1,3 @@
+MD5 的 0072Vf1pgy1foxkjfmwohj31kw0w0x2o.jpg 哈希:
+66ffcaf121bf4bd5f62f66dfee8fc382
+CertUtil: -hashfile 命令成功完成。

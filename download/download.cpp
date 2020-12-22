@@ -53,11 +53,9 @@ double calc(img a,img b)
 }
 vector<img>his;
 set<string>namelib;
-ifstream md5in,fin;
-ofstream fout;
 int read()
 {
-	fin.open("lib.txt",ios::in);
+	ifstream fin("lib.txt",ios::in);
 	img t;
 	while(fin.peek()!=EOF)
 	{
@@ -76,20 +74,18 @@ int read()
 } 
 string md5(string name)
 {
-	fout.open("name.txt",ios::out);
-	fout<<name<<endl;
-	fout.close();
-	system("rename.exe");
-//	fin.open("rename.txt",ios::in);
-//	getline(fin,name);///////////////////////////////////////////////
-//	cout<<"here is download.exe---line 85"<<endl<<"the new md5 name is "<<name<<endl;
-//	fin.close();
+	system(("md5.exe "+name).c_str());
+	ifstream fin("md5.txt");
+	fin>>name;
 	return name;
 }
-
+void rename(string name,string md5name)
+{
+	system(("rename "+string(" \"")+name+"\" "+md5name).c_str());
+}
 void insert(img t)//向文本中添加 
 {
-	fout.open("lib.txt",ios::out|ios::app);
+	ofstream fout("lib.txt",ios::out|ios::app);
 	fout<<t.name<<" ";
 	for(int i=1;i<=8;i++)
 	for(int j=1;j<=8;j++)
@@ -114,12 +110,13 @@ void cld(img & t)
 		fin>>t.CLD[i][j][c];
 	}
 	fin.close();
+//	fin.clear();
 }
 void insert(string name)//ask CLD
 {
 	cld(name);
 	img t(name);
-	fin.open("CLD.txt",ios::in);
+	ifstream fin("CLD.txt",ios::in);
 	for(int i=1;i<=8;i++)
 	for(int j=1;j<=8;j++)
 	{
@@ -137,14 +134,18 @@ int download(string down_url,string name)
 	cout<<"执行指令:"<<str<<endl;
 	if(system(str.c_str())==0)
 	{
-		//判重 
-		name=md5(name);
-		if(namelib.find(name)!=namelib.end()) return 1;//found in history
-		if(system(("dir /a "+name).c_str())!=1){//found in local
-			namelib.insert(name); 
-			insert(name);//本地已有但是记录里没有，那么就要向记录中添加 
-			return 2;
+		//ask(MD5)
+		string md5name=md5(name);
+		//check(MD5)
+		if(namelib.find(md5name)!=namelib.end()) return 1;//found in history
+		if(system(("dir /a "+md5name).c_str())!=1){//found in local
+			namelib.insert(md5name); 
+			insert(md5name);//本地已有但是记录里没有，那么就要向记录中添加 
+			system(("del "+name).c_str());//删除重复的同MD5图片 
+			return 1;
 		}
+		rename(name,md5name);
+		name=md5name; 
 		img t(name);
 		cld(t);
 		double dt;
@@ -161,12 +162,12 @@ int download(string down_url,string name)
 		his.push_back(name);
 		insert(t);
 	}
-	else fail++;
+	else return 2;
 	cout<<"下载完毕\n"; 
 	return 0;
 }
 
-string url,name;
+string url,name;//for get_json
 //1成功 2重复 0失败 
 int get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
 {
@@ -177,7 +178,7 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 		fail++;
 		return 0;
 	}
-	fin.open("temp.txt",ios::in);
+	ifstream fin("temp.txt",ios::in);
 	if(fin.peek()==EOF) cout<<"没有json数据返回\n";
 	else{
 		string json;
@@ -243,6 +244,19 @@ int main()
 		n++;
 		if(get_json(address)) continue;
 		int res=download(url,name);
+		if(res==0)
+		{
+			succ++;
+		}
+		if(res==1)
+		{
+			had++;
+		}
+		if(res==2)
+		{
+			fail++;
+		}
+		if(fail%100==0) Sleep(10000);
 		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
 		
 //		cin.get();
