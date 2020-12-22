@@ -1,8 +1,0 @@
-http://api.mtyqx.cn/api/random.php?return=json
-http://api.mtyqx.cn/tapi/random.php?return=json
-http://www.dmoe.cc/random.php?return=json
-https://api.ixiaowai.cn/api/api.php?return=json
-https://api.julym.com/acg/?return=json
-
-
-https://api.ixiaowai.cn/api/api.php
