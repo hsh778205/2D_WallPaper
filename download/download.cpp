@@ -29,16 +29,6 @@ struct img
 		name=str;
 		memset(CLD,0,sizeof(CLD));
 	}
-	bool operator<(img z)const
-	{
-		for(int i=1;i<=8;i++)
-		for(int j=1;j<=8;j++)
-		{
-			if(CLD[i][j]<z.CLD[i][j]) return 1;
-			if(CLD[i][j]>z.CLD[i][j]) return 0;
-		}
-		return 0;
-	}
 };
 double calc(img a,img b)
 {

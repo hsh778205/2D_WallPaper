@@ -118,8 +118,8 @@ form https://t.bilibili.com/387278090140124626?tab=2
 * [x] 把所有图片重命名为$MD5$。
 * [x] 写一个程序(或者函数)，接受多个参数，参数为本地图片地址，调用python计算矩阵。
 * [x] 用python分析图片计算$CLD$。
-* [ ] 预处理出一件下载好的图片的$CLD$至`lib.txt`
-* [ ] 在`download.cpp`中调用这个程序，以后下载时用这个判重。
+* [ ] 预处理出已经下载好的图片的$CLD$至`lib.txt`
+* [x] 在`download.cpp`中调用这个程序，以后下载时用这个判重。
 
 那么现在的判重顺序就有：
 
@@ -128,6 +128,9 @@ form https://t.bilibili.com/387278090140124626?tab=2
 3. $CLD$
 
 没了。
+
+### 下载流程
+
 $$
 download(json)\to download(picture)\to ask(MD5)\to check(MD5)\\\to rename(MD5)\to calc(CLD)\to read(CLD)\to check(CLD)\to delete(MD5)
 $$
