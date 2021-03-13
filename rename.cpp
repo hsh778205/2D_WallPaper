@@ -37,7 +37,7 @@ int main()
 		tin>>md5;
 		tin.close();
 		system(("rename "+string(" \"")+tempname+nxt+"\" "+md5+nxt).c_str());
-		fout<<md5+nxt;
+		fout<<md5+nxt<<endl;
 		cout<<"rename.exe : we got a md5 name : "<<md5+nxt<<endl;
 		cout<<"rename "+string(" \"")+str+"\" "+md5+nxt<<endl;
 		system(("del "+tempname+nxt).c_str());
