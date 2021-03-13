@@ -12,10 +12,10 @@ int start_time,last_time;
 int max_time;
 int succ,fail,had,n; 
 //  成功 失败 重复 总数 
-void title(string add)
+void title()
 {
 	stringstream ss;
-	ss<<"title add="<<add<<" all="<<n<<" succ="<<succ<<" had="<<had<<" fail="<<fail<<" down_speed="<<(double)60000/(clock()-last_time)<<" avg_speed="<<(double)n/(clock()-start_time)*60000;
+	ss<<"title all="<<n<<" succ="<<succ<<" had="<<had<<" fail="<<fail<<" down_speed="<<(double)60000/(clock()-last_time)<<" avg_speed="<<(double)n/(clock()-start_time)*60000;
 	last_time=clock();
 	system(ss.str().c_str()); 
 }
@@ -81,7 +81,7 @@ void insert(img t)//向文本中添加
 	for(int j=1;j<=8;j++)
 	for(int c=0;c<3;c++)
 		fout<<t.CLD[i][j][c]<<" ";
-	fout<<endl;
+	fout<<endl; 
 	fout.close();
 }
 void cld(string name)
@@ -165,11 +165,12 @@ int download(string down_url,string name)
 
 string url,name;//for get_json
 //1成功 2重复 0失败 
-int get_json(string json_url,string key1="http",string key2="large/",char stop='\"')
+int get_json(string json_url)
 {
 	cout<<"开始下载json数据\n";
 	stringstream ss;
 	ss<<"certutil -urlcache -split -f "<<json_url<<" temp.txt"; 
+	cout<<"order="<<ss.str()<<endl;
 	if(system(ss.str().c_str())!=0){
 		fail++;
 		return 0;
@@ -183,23 +184,26 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 			if(json.back()=='\\') json.pop_back();
 		}
 		cout<<"json:"<<json<<endl;
-		if(json.find(key1)==string::npos||json.find(key2)==string::npos){
-			cout<<"解析失败:未查找到关键字\n";
-			return 1;
+		if(json.find(".jpg")==string::npos)
+		{
+			cout<<"找不到关键字.jpg"<<endl;
+			return 1; 
 		}
-		else{
-			int post=json.find(key1);
-			url.clear();
-			while(json[post]!=stop) url.push_back(json[post++]);
-			cout<<"url="<<url<<endl;
-			post=json.find(key2);
-			post+=key2.size();
-			name.clear();
-			while(json[post]!=stop) name.push_back(json[post++]);
-			cout<<"name="<<name<<endl;
-			cout<<"json数据解析完毕\n";
-			return 0;
-		}
+		int ed=json.find(".jpg")+3;
+		int st=ed;
+		while(json[st]!='\"'&&st>0) st--;
+		url.clear();
+		for(int i=st+1;i<=ed;i++) url.push_back(json[i]);
+		if(url.find("https")==string::npos) url="https:"+url;
+		cout<<"url="<<url<<endl;
+		
+		st=ed;
+		while(json[st]!='/'&&st>0) st--;
+		name.clear();
+		for(int i=st+1;i<=ed;i++) name.push_back(json[i]);
+		cout<<"name="<<name<<endl;
+		cout<<"json数据解析完毕\n";
+		return 0;
 	}
 	return 1;
 }
@@ -213,11 +217,30 @@ int get_json(string json_url,string key1="http",string key2="large/",char stop='
 //https://api.ixiaowai.cn/api/api.php（二次元动漫）
 //https://api.ixiaowai.cn/mcapi/mcapi.php（mc酱动漫）
 //https://api.ixiaowai.cn/gqapi/gqapi.php（高清壁纸） 
+vector<string>address;
+void init()
+{
+	address.push_back("http://api.mtyqx.cn/tapi/random.php?return=json");
+	address.push_back("http://api.mtyqx.cn/api/random.php?return=json");
+	address.push_back("http://api.mtyqx.cn/tapi/random.php?return=json");
+	address.push_back("http://www.dmoe.cc/random.php?return=json");
+	address.push_back("https://api.ixiaowai.cn/api/api.php?return=json");
+	address.push_back("https://api.ixiaowai.cn/mcapi/mcapi.php?return=json");
+//	address.push_back("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");
+	address.push_back("http://img.xjh.me/random_img.php?return=json&type=bg");
+}
+string rnd_add()
+{
+	return address[rand()%address.size()];
+}
 int main()
 {
+	srand(time(NULL));
+	init(); 
 	cout<<"读取记录中...\n";
 	cout<<"读取到"<<read()<<"条历史记录\n"; 
 	stringstream ss;
+	/*
 	string address;
 	cout<<"请输入url（可以调用json的）\n";
 	cin>>address;
@@ -227,18 +250,19 @@ int main()
 		cin>>t;
 		if(t=="y"||t=="yes") address+="?return=json";
 	}
+	*/
 	cout<<"输入最高速度,(0为不限速)每分钟最多XX张";
 	cin>>max_time;
 	if(max_time!=0) max_time=60000/max_time;
 	start_time=clock(),last_time=clock();
-	system(("title "+address).c_str());
+	system(("title "));
 	
 	while(true)
 	{
 		cout<<"****************************************************************************************************"<<endl;
-		title(address);
+		title();
 		n++;
-		if(get_json(address)) continue;
+		if(get_json(rnd_add())) continue;
 		int res=download(url,name);
 		if(res==0)
 		{
@@ -252,7 +276,7 @@ int main()
 		{
 			fail++;
 		}
-		if(fail%100==0) Sleep(10000);
+		if(fail%100==99) Sleep(10000);
 		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
 		
 //		cin.get();

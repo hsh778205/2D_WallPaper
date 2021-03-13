@@ -1,1 +1,5 @@
-﻿{"code":"200","imgurl":"https:\/\/tva3.sinaimg.cn\/large\/0072Vf1pgy1foxli2cbwbj31hc0u0h0e.jpg","width":"1920","height":"1080"}
+{
+    "error": 0,
+    "result": 200,
+    "img": "\/\/img.xjh.me\/desktop\/img\/64082849_p0.jpg"
+}
