@@ -127,7 +127,11 @@ int download(string down_url,string name)
 		//ask(MD5)
 		string md5name=md5(name);
 		//check(MD5)
-		if(namelib.find(md5name)!=namelib.end()) return 1;//found in history
+		if(namelib.find(md5name)!=namelib.end())
+		{
+			system(("del "+name).c_str());//删除重复的同MD5图片 
+			return 1;//found in history
+		} 
 		if(system(("dir /a "+md5name).c_str())!=1){//found in local
 			namelib.insert(md5name); 
 			insert(md5name);//本地已有但是记录里没有，那么就要向记录中添加 
