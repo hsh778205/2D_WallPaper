@@ -65,11 +65,14 @@ int main(int argc, char* argv[])//argv[0]==self
 //	system(("python CLD.py"));
 	
 	ifstream fin("rename.txt");
-	stringstream ss;
+	
 	string str;
-	ss.clear();
-	ss<<cnt;
-	system(("title "+ss.str()).c_str());
+	{
+		stringstream ss;
+		ss<<cnt;
+		system(("title "+ss.str()).c_str());
+	}
+	
 	while(fin.peek()&&!fin.eof())
 	{
 		fin>>str;
@@ -79,7 +82,7 @@ int main(int argc, char* argv[])//argv[0]==self
 		fout.close();
 		system(("python CLD.py"));
 		cnt++;
-		ss.clear();
+		stringstream ss;
 		ss<<cnt;
 		system(("title "+ss.str()).c_str());
 	}
