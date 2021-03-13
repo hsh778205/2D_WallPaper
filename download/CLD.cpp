@@ -69,7 +69,7 @@ int main(int argc, char* argv[])//argv[0]==self
 	{
 		fin>>str;
 		cout<<"doing "<<str<<endl;//do this
-		fstream fout("tempname.txt",ios::out);
+		fstream fout("md5.txt",ios::out);
 		fout<<str;
 		fout.close();
 		system(("python CLD.py"));

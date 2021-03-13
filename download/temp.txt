@@ -1,5 +1,1 @@
-{
-    "error": 0,
-    "result": 200,
-    "img": "\/\/img.xjh.me\/desktop\/img\/64082849_p0.jpg"
-}
+{"code":"200","imgurl":"https:\/\/tva1.sinaimg.cn\/large\/87c01ec7gy1frkiaihz9wj21hc0xcb29.jpg","width":"1920","height":"1200"}

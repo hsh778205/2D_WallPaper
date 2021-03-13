@@ -225,9 +225,9 @@ void init()
 	address.push_back("http://api.mtyqx.cn/tapi/random.php?return=json");
 	address.push_back("http://www.dmoe.cc/random.php?return=json");
 	address.push_back("https://api.ixiaowai.cn/api/api.php?return=json");
-	address.push_back("https://api.ixiaowai.cn/mcapi/mcapi.php?return=json");
-//	address.push_back("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");
-	address.push_back("http://img.xjh.me/random_img.php?return=json&type=bg");
+//	address.push_back("https://api.ixiaowai.cn/mcapi/mcapi.php?return=json");//UKE:CANNOT calc CLD
+//	address.push_back("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");//WA:NO 2D_WallPaper
+	address.push_back("http://img.xjh.me/random_img.php?type=bg^&return=json");
 }
 string rnd_add()
 {
@@ -277,7 +277,7 @@ int main()
 			fail++;
 		}
 		if(fail%100==99) Sleep(10000);
-		if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
+		if(max_time) if(clock()-last_time<max_time) Sleep(max_time-clock()+last_time);
 		
 //		cin.get();
 	}
