@@ -129,6 +129,7 @@ int download(string down_url,string name)
 		//check(MD5)
 		if(namelib.find(md5name)!=namelib.end())
 		{
+			cout<<"在lib中找到了相同MD5的文件，删除该图片"<<endl<<endl; 
 			system(("del "+name).c_str());//删除重复的同MD5图片 
 			return 1;//found in history
 		} 
@@ -136,6 +137,7 @@ int download(string down_url,string name)
 			namelib.insert(md5name); 
 			insert(md5name);//本地已有但是记录里没有，那么就要向记录中添加 
 			system(("del "+name).c_str());//删除重复的同MD5图片 
+			cout<<"在本地中找到了相同MD5的文件，删除该图片"<<endl<<endl; 
 			return 1;
 		}
 		rename(name,md5name);
