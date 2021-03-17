@@ -18,7 +18,7 @@ fp=open("CLD.txt","a")
 hmax=int(h/8)
 wmax=int(w/8)
 cnt=0
-#fp.write(name+"  ")
+#fp.write(name+" ")
 for si in range(0,8):
     for sj in range(0,8):
         Sum = [0, 0, 0]
