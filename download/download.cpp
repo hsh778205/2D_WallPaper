@@ -230,6 +230,7 @@ void init()
 	address.push_back("http://img.xjh.me/random_img.php?type=bg^&return=json");
 //	address.push_back("https://api.hanximeng.com/ranimg/api.php?type=json");//ÓÐË®Ó¡ 
 	address.push_back("https://api.btstu.cn/sjbz/api.php?lx=dongman^&format=json");
+//	address.push_back("https://acg.toubiec.cn/random.php?ret=json");//over
 }
 string rnd_add()
 {
