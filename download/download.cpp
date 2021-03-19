@@ -228,6 +228,8 @@ void init()
 //	address.push_back("https://api.ixiaowai.cn/mcapi/mcapi.php?return=json");//UKE:CANNOT calc CLD
 //	address.push_back("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");//WA:NO 2D_WallPaper
 	address.push_back("http://img.xjh.me/random_img.php?type=bg^&return=json");
+//	address.push_back("https://api.hanximeng.com/ranimg/api.php?type=json");//ÓÐË®Ó¡ 
+	address.push_back("https://api.btstu.cn/sjbz/api.php?lx=dongman^&format=json");
 }
 string rnd_add()
 {
