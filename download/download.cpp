@@ -231,6 +231,7 @@ void init()
 //	address.push_back("https://api.hanximeng.com/ranimg/api.php?type=json");//ÓÐË®Ó¡ 
 	address.push_back("https://api.btstu.cn/sjbz/api.php?lx=dongman^&format=json");
 //	address.push_back("https://acg.toubiec.cn/random.php?ret=json");//over
+	address.push_back("https://img.paulzzh.tech/touhou/random?type=json");
 }
 string rnd_add()
 {
